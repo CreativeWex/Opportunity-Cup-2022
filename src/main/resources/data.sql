@@ -9,7 +9,22 @@ CREATE TABLE IF NOT EXISTS users (
      first_name TEXT NOT NULL,
      patronymic TEXT,
      date_of_birth TIMESTAMP NOT NULL,
-     passport INT NOT NULL,
+     passport TEXT NOT NULL,
      passport_valid_to TIMESTAMP NOT NULL,
      phone TEXT
 );
+
+CREATE TABLE IF NOT EXISTS transactions (
+     id TEXT PRIMARY KEY,
+     transactionDate TIMESTAMP NOT NULL,
+     card TEXT NOT NULL,
+     account TEXT REFERENCES users(client),
+     oper_type TEXT NOT NULL,
+     amount NUMERIC(10,2) NOT NULL,
+     oper_result TEXT NOT NULL,
+     terminal TEXT NOT NULL,
+     terminal_type TEXT NOT NULL,
+     city TEXT NOT NULL,
+     address TEXT NOT NULL
+);
+

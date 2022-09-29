@@ -17,11 +17,11 @@ public class Parser {
         JSONObject jsonObject = (JSONObject) new JSONParser().parse(new FileReader("src/main/resources/test.json")); //TODO: заменить test на transactions
         jsonObject = (JSONObject) jsonObject.get("transactions");
         findTransactionsIds();
-        displayTransactionIds();
+        displayTransactionIds();  //TODO
 
         for (String id : transactionsIds) {
             JSONObject jsonTransaction = (JSONObject) jsonObject.get(id);
-            System.out.println(jsonTransaction);
+            System.out.println(jsonTransaction); //TODO
         }
 
 

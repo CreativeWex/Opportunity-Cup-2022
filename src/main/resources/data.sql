@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS transactions (
      transactionDate TIMESTAMP NOT NULL,
      card TEXT NOT NULL,
      account TEXT REFERENCES users(client),
+     account_valid_to TIMESTAMP NOT NULL,
      oper_type TEXT NOT NULL,
      amount NUMERIC(10,2) NOT NULL,
      oper_result TEXT NOT NULL,

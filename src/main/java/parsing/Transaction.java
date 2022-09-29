@@ -8,6 +8,8 @@ public class Transaction {
     private Timestamp transactionDate;
     private String card;
     private String account;
+    private Timestamp accountValidTo;
+
     private String operationType;
     private String amount; // TODO: change type to Number
     private String operationResult;

@@ -1,6 +1,6 @@
 package parsing;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 public class User {
     private String clientId;
     private String lastName;

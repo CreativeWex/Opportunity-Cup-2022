@@ -1,5 +1,7 @@
-package parsing;
+package logic;
 
+import models.Transaction;
+import models.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -17,6 +19,35 @@ import java.util.Scanner;
 public class Parser {
     private List<Transaction> transactions = new ArrayList<>();
     private final HashSet<String> transactionsIds = new HashSet<>();
+    private void findTransactionsIds() throws FileNotFoundException {
+        File file = new File("src/main/resources/test.json"); //TODO: заменить test на transactions
+        Scanner scanner = new Scanner(file);
+        int lineCounter = 0;
+        for (int i = 0; i < 2; i++) {
+            scanner.nextLine();
+        }
+        String line = scanner.nextLine();
+        line = line.replace("\t\t", "");
+        line = line.replace(": {", "");
+        line = line.replace("\"", "");
+        transactionsIds.add(line);
+        lineCounter++;
+
+        while (scanner.hasNextLine()) {
+            line = scanner.nextLine();
+            if (lineCounter == 21) {
+                line = line.replace("\t\t", "");
+                line = line.replace(": {", "");
+                line = line.replace("\"", "");
+                transactionsIds.add(line);
+                lineCounter = 0;
+            }
+            lineCounter++;
+        }
+        transactionsIds.remove("\t}");
+        scanner.close();
+    }
+
     public Parser() throws IOException, ParseException {
         JSONObject jsonObject = (JSONObject) new JSONParser().parse(new FileReader("src/main/resources/test.json")); //TODO: заменить test на transactions
         jsonObject = (JSONObject) jsonObject.get("transactions");
@@ -55,34 +86,6 @@ public class Parser {
 
 
 
-    }
-    private void findTransactionsIds() throws FileNotFoundException {
-        File file = new File("src/main/resources/test.json"); //TODO: заменить test на transactions
-        Scanner scanner = new Scanner(file);
-        int lineCounter = 0;
-        for (int i = 0; i < 2; i++) {
-            scanner.nextLine();
-        }
-        String line = scanner.nextLine();
-        line = line.replace("\t\t", "");
-        line = line.replace(": {", "");
-        line = line.replace("\"", "");
-        transactionsIds.add(line);
-        lineCounter++;
-
-        while (scanner.hasNextLine()) {
-            line = scanner.nextLine();
-            if (lineCounter == 21) {
-                line = line.replace("\t\t", "");
-                line = line.replace(": {", "");
-                line = line.replace("\"", "");
-                transactionsIds.add(line);
-                lineCounter = 0;
-            }
-            lineCounter++;
-        }
-        transactionsIds.remove("\t}");
-        scanner.close();
     }
     private void displayTransactionIds() {
         System.out.println("Ids:");

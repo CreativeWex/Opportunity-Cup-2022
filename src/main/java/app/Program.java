@@ -1,7 +1,7 @@
 package app;
 
 import org.json.simple.parser.ParseException;
-import parsing.Parser;
+import logic.Parser;
 
 import java.io.IOException;
 public class Program {

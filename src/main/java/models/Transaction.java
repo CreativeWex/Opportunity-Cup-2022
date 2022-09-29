@@ -1,4 +1,4 @@
-package parsing;
+package models;
 
 import java.sql.Timestamp;
 

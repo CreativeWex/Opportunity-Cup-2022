@@ -17,7 +17,7 @@ public class Parser {
     private final List<Transaction> transactions = new ArrayList<>();
     private final LinkedHashSet<String> transactionsIds = new LinkedHashSet<>();
     private void findTransactionsIds() throws FileNotFoundException {
-        File file = new File("src/main/resources/transactions.json"); //TODO: заменить test на transactions
+        File file = new File("src/main/resources/transactions.json");
         Scanner scanner = new Scanner(file);
         int lineCounter = 0;
         for (int i = 0; i < 2; i++) {
@@ -46,7 +46,7 @@ public class Parser {
     }
 
     public Parser() throws IOException, ParseException {
-        JSONObject jsonObject = (JSONObject) new JSONParser().parse(new FileReader("src/main/resources/transactions.json")); //TODO: заменить test на transactions
+        JSONObject jsonObject = (JSONObject) new JSONParser().parse(new FileReader("src/main/resources/transactions.json"));
         jsonObject = (JSONObject) jsonObject.get("transactions");
         findTransactionsIds();
         for (String id : transactionsIds) {

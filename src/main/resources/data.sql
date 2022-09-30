@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS transactions (
      id TEXT PRIMARY KEY,
-     transactionDate TIMESTAMP NOT NULL,
+     transaction_date TIMESTAMP NOT NULL,
      card TEXT NOT NULL,
      account TEXT REFERENCES users(client),
      account_valid_to TIMESTAMP NOT NULL,

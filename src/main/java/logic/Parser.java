@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Parser {
-    private List<Transaction> transactions = new ArrayList<>();
+    private final List<Transaction> transactions = new ArrayList<>();
     private final HashSet<String> transactionsIds = new HashSet<>();
     private void findTransactionsIds() throws FileNotFoundException {
         File file = new File("src/main/resources/test.json"); //TODO: заменить test на transactions
@@ -52,40 +52,34 @@ public class Parser {
         JSONObject jsonObject = (JSONObject) new JSONParser().parse(new FileReader("src/main/resources/test.json")); //TODO: заменить test на transactions
         jsonObject = (JSONObject) jsonObject.get("transactions");
         findTransactionsIds();
-        displayTransactionIds();  //TODO
 
         for (String id : transactionsIds) {
             JSONObject jsonTransaction = (JSONObject) jsonObject.get(id);
-            System.out.println(jsonTransaction); //TODO
-            String clientId = (String) jsonTransaction.get("client");
-            String lastName = (String) jsonTransaction.get("last_name");
-            String firstName = (String) jsonTransaction.get("first_name");
-            String patronymic = (String) jsonTransaction.get("patronymic");
-            Timestamp dateOfBirth = (Timestamp) jsonTransaction.get("date_of_birth");
-            String passport = (String) jsonTransaction.get("passport");
-            Timestamp passportValidTo = (Timestamp) jsonTransaction.get("passport_valid_to");
-            String phone = (String) jsonTransaction.get("phone");
-            User client = new User(clientId, lastName, firstName, patronymic, dateOfBirth, passport,
-                    passportValidTo, phone);
+            User client = new User(
+                    (String) jsonTransaction.get("client"),
+                    (String) jsonTransaction.get("last_name"),
+                    (String) jsonTransaction.get("first_name"),
+                    (String) jsonTransaction.get("patronymic"),
+                    (String) jsonTransaction.get("date_of_birth"),
+                    jsonTransaction.get("passport").toString(),
+                    (String) jsonTransaction.get("passport_valid_to"),
+                    (String) jsonTransaction.get("phone"));
 
-            Timestamp transactionDate = (Timestamp) jsonTransaction.get("date");
-            String card = (String) jsonTransaction.get("card");
-            String account = (String) jsonTransaction.get("account");
-            String operationType = (String) jsonTransaction.get("date_of_birth");
-            String amount = (String) jsonTransaction.get("date_of_birth");
-            String operationResult = (String) jsonTransaction.get("date_of_birth");
-            String terminal = (String) jsonTransaction.get("date_of_birth");
-            String terminalType = (String) jsonTransaction.get("date_of_birth");
-            String city = (String) jsonTransaction.get("date_of_birth");
-            String address = (String) jsonTransaction.get("date_of_birth");
-
-
+            Transaction transaction = new Transaction(client,
+                    id,
+                    (String) jsonTransaction.get("date"),
+                    (String) jsonTransaction.get("card"),
+                    (String) jsonTransaction.get("account"),
+                    (String) jsonTransaction.get("account_valid_to"),
+                    (String) jsonTransaction.get("oper_type"),
+                    (Double) jsonTransaction.get("amount"),
+                    (String) jsonTransaction.get("oper_result"),
+                    (String) jsonTransaction.get("terminal"),
+                    (String) jsonTransaction.get("terminal_type"),
+                    (String) jsonTransaction.get("city"),
+                    (String) jsonTransaction.get("address"));
+            transactions.add(transaction);
         }
-
-
-
-
-
     }
     private void displayTransactionIds() {
         System.out.println("Ids:");

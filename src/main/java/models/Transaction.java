@@ -5,26 +5,27 @@ import java.sql.Timestamp;
 public class Transaction {
     private User client;
     private String id;
-    private Timestamp transactionDate;
+    private String transactionDate;
     private String card;
     private String account;
-    private Timestamp accountValidTo;
+    private String accountValidTo;
 
     private String operationType;
-    private String amount; // TODO: change type to Number
+    private Double amount; // TODO: change type to Number
     private String operationResult;
     private String terminal;
     private String terminalType;
     private String city;
     private String address;
 
-    public Transaction(User client, String id, Timestamp transactionDate, String card, String account, String operationType,
-                       String amount, String operationResult, String terminal, String terminalType, String city, String address) {
+    public Transaction(User client, String id, String transactionDate, String card, String account,String accountValidTo, String operationType,
+                       Double amount, String operationResult, String terminal, String terminalType, String city, String address) {
         this.client = client;
         this.id = id;
         this.transactionDate = transactionDate;
         this.card = card;
-        this.account = client.getClientId();
+        this.account = account;
+        this.accountValidTo = accountValidTo;
         this.operationType = operationType;
         this.amount = amount;
         this.operationResult = operationResult;
@@ -32,6 +33,14 @@ public class Transaction {
         this.terminalType = terminalType;
         this.city = city;
         this.address =address;
+    }
+
+    public String getAccountValidTo() {
+        return accountValidTo;
+    }
+
+    public void setAccountValidTo(String accountValidTo) {
+        this.accountValidTo = accountValidTo;
     }
 
     public String getAccount() {
@@ -42,7 +51,7 @@ public class Transaction {
         return address;
     }
 
-    public String getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
@@ -74,7 +83,7 @@ public class Transaction {
         return terminalType;
     }
 
-    public Timestamp getTransactionDate() {
+    public String getTransactionDate() {
         return transactionDate;
     }
 
@@ -82,7 +91,7 @@ public class Transaction {
         return client;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -126,7 +135,7 @@ public class Transaction {
         this.terminalType = terminalType;
     }
 
-    public void setTransactionDate(Timestamp transactionDate) {
+    public void setTransactionDate(String transactionDate) {
         this.transactionDate = transactionDate;
     }
 }

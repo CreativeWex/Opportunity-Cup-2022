@@ -5,21 +5,22 @@ import java.sql.Timestamp;
 public class Transaction {
     private User client;
     private String id;
-    private String transactionDate;
+    private Timestamp transactionDate;
     private String card;
     private String account;
-    private String accountValidTo;
+    private Timestamp accountValidTo;
 
     private String operationType;
-    private Double amount; // TODO: change type to Number
+    private Double amount;
     private String operationResult;
     private String terminal;
     private String terminalType;
     private String city;
     private String address;
 
-    public Transaction(User client, String id, String transactionDate, String card, String account,String accountValidTo, String operationType,
-                       Double amount, String operationResult, String terminal, String terminalType, String city, String address) {
+    public Transaction(User client, String id, Timestamp transactionDate, String card, String account,
+                       Timestamp accountValidTo, String operationType, Double amount, String operationResult,
+                       String terminal, String terminalType, String city, String address) {
         this.client = client;
         this.id = id;
         this.transactionDate = transactionDate;
@@ -32,14 +33,14 @@ public class Transaction {
         this.terminal = terminal;
         this.terminalType = terminalType;
         this.city = city;
-        this.address =address;
+        this.address = address;
     }
 
-    public String getAccountValidTo() {
+    public Timestamp getAccountValidTo() {
         return accountValidTo;
     }
 
-    public void setAccountValidTo(String accountValidTo) {
+    public void setAccountValidTo(Timestamp accountValidTo) {
         this.accountValidTo = accountValidTo;
     }
 
@@ -83,7 +84,7 @@ public class Transaction {
         return terminalType;
     }
 
-    public String getTransactionDate() {
+    public Timestamp getTransactionDate() {
         return transactionDate;
     }
 
@@ -135,7 +136,7 @@ public class Transaction {
         this.terminalType = terminalType;
     }
 
-    public void setTransactionDate(String transactionDate) {
+    public void setTransactionDate(Timestamp transactionDate) {
         this.transactionDate = transactionDate;
     }
 }

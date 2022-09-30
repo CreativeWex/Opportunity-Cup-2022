@@ -6,13 +6,13 @@ public class User {
     private String lastName;
     private String firstName;
     private String patronymic;
-    private String dateOfBirth;
+    private Timestamp dateOfBirth;
     private String passport;
-    private String passportValidTo;
+    private Timestamp passportValidTo;
     private String phone;
 
-    public User(String clientId, String lastName, String firstName, String patronymic, String dateOfBirth,
-                String passport, String passportValidTo, String phone) {
+    public User(String clientId, String lastName, String firstName, String patronymic, Timestamp dateOfBirth,
+                String passport, Timestamp passportValidTo, String phone) {
         this.clientId = clientId;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -27,7 +27,7 @@ public class User {
         return clientId;
     }
 
-    public String getDateOfBirth() {
+    public Timestamp getDateOfBirth() {
         return dateOfBirth;
     }
 
@@ -43,7 +43,7 @@ public class User {
         return passport;
     }
 
-    public String getPassportValidTo() {
+    public Timestamp getPassportValidTo() {
         return passportValidTo;
     }
 
@@ -59,7 +59,7 @@ public class User {
         this.clientId = clientId;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(Timestamp dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -75,7 +75,7 @@ public class User {
         this.passport = passport;
     }
 
-    public void setPassportValidTo(String passportValidTo) {
+    public void setPassportValidTo(Timestamp passportValidTo) {
         this.passportValidTo = passportValidTo;
     }
 

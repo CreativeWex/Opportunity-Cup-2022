@@ -1,10 +1,13 @@
+\c chat
+
 DROP DATABASE IF EXISTS open_cup;
 CREATE DATABASE open_cup;
 
 \c open_cup
 
 CREATE TABLE IF NOT EXISTS users (
-     client TEXT PRIMARY KEY NOT NULL,
+     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY ,
+     client TEXT NOT NULL,
      last_name TEXT NOT NULL,
      first_name TEXT NOT NULL,
      patronymic TEXT,

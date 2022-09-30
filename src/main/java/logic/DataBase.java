@@ -35,6 +35,7 @@ public class DataBase {
         }
     }
     public void fillDatabaseFromList(List<Transaction> list) throws SQLException {
+        int clientsAmount = 0;
         for (Transaction transaction : list) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users" +
                     "(client, last_name, first_name, patronymic, date_of_birth, passport, passport_valid_to, phone)" +
@@ -48,8 +49,9 @@ public class DataBase {
             preparedStatement.setString(6, client.getPassport());
             preparedStatement.setTimestamp(7, client.getPassportValidTo());
             preparedStatement.setString(8, client.getPhone());
-            preparedStatement.executeUpdate();
+            clientsAmount += preparedStatement.executeUpdate();
         }
+        System.out.println("Amount of client in database:\t" + clientsAmount);
 
 
 

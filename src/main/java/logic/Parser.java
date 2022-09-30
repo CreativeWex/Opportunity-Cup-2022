@@ -11,16 +11,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Parser {
     private final List<Transaction> transactions = new ArrayList<>();
-    private final HashSet<String> transactionsIds = new HashSet<>();
+    private final LinkedHashSet<String> transactionsIds = new LinkedHashSet<>();
     private void findTransactionsIds() throws FileNotFoundException {
-        File file = new File("src/main/resources/test.json"); //TODO: заменить test на transactions
+        File file = new File("src/main/resources/transactions.json"); //TODO: заменить test на transactions
         Scanner scanner = new Scanner(file);
         int lineCounter = 0;
         for (int i = 0; i < 2; i++) {
@@ -49,10 +46,9 @@ public class Parser {
     }
 
     public Parser() throws IOException, ParseException {
-        JSONObject jsonObject = (JSONObject) new JSONParser().parse(new FileReader("src/main/resources/test.json")); //TODO: заменить test на transactions
+        JSONObject jsonObject = (JSONObject) new JSONParser().parse(new FileReader("src/main/resources/transactions.json")); //TODO: заменить test на transactions
         jsonObject = (JSONObject) jsonObject.get("transactions");
         findTransactionsIds();
-
         for (String id : transactionsIds) {
             JSONObject jsonTransaction = (JSONObject) jsonObject.get(id);
             User client = new User(
@@ -60,19 +56,19 @@ public class Parser {
                     (String) jsonTransaction.get("last_name"),
                     (String) jsonTransaction.get("first_name"),
                     (String) jsonTransaction.get("patronymic"),
-                    Timestamp.valueOf(jsonTransaction.get("date_of_birth").toString().replace('T', ' ')),
+                    formatTimestamp(jsonTransaction.get("date_of_birth").toString()),
                     jsonTransaction.get("passport").toString(),
-                    Timestamp.valueOf(jsonTransaction.get("passport_valid_to").toString().replace('T', ' ')),
+                    formatTimestamp(jsonTransaction.get("passport_valid_to").toString()),
                     (String) jsonTransaction.get("phone"));
 
             Transaction transaction = new Transaction(client,
                     id,
-                    Timestamp.valueOf(jsonTransaction.get("date").toString().replace('T', ' ')),
+                    formatTimestamp(jsonTransaction.get("date").toString()),
                     (String) jsonTransaction.get("card"),
                     (String) jsonTransaction.get("account"),
-                    Timestamp.valueOf(jsonTransaction.get("account_valid_to").toString().replace('T', ' ')),
+                    formatTimestamp(jsonTransaction.get("account_valid_to").toString()),
                     (String) jsonTransaction.get("oper_type"),
-                    (Double) jsonTransaction.get("amount"),
+                    Double.parseDouble(jsonTransaction.get("amount").toString()),
                     (String) jsonTransaction.get("oper_result"),
                     (String) jsonTransaction.get("terminal"),
                     (String) jsonTransaction.get("terminal_type"),
@@ -88,6 +84,13 @@ public class Parser {
         }
     }
 
+    private Timestamp formatTimestamp(String str) {
+        str = str.replace('T', ' ');
+        if (str.length() == 10) {
+            str += " 00:00:00";
+        }
+        return Timestamp.valueOf(str);
+    }
     public List<Transaction> getTransactions() {
         return transactions;
     }

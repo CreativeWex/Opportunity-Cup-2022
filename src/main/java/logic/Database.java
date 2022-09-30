@@ -10,13 +10,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class DataBase {
+public class Database {
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/open_cup";
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "1234";
     private static Connection connection;
 
-    public DataBase() {
+    public Database() {
         try {
             HikariConfig config = new HikariConfig();
             config.setJdbcUrl(DB_URL);
@@ -75,6 +75,8 @@ public class DataBase {
             clientsAmount += preparedStatement.executeUpdate();
         }
         System.out.println("Amount of client in database:\t" + clientsAmount);
-
+    }
+    public static Connection getConnection() {
+        return connection;
     }
 }

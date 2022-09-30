@@ -15,6 +15,7 @@ import java.util.*;
 
 public class Parser {
     private final List<Transaction> transactions = new ArrayList<>();
+    private final List<User> users = new ArrayList<>();
     private final LinkedHashSet<String> transactionsIds = new LinkedHashSet<>();
     private void findTransactionsIds() throws FileNotFoundException {
         File file = new File("src/main/resources/transactions.json");
@@ -60,6 +61,7 @@ public class Parser {
                     jsonTransaction.get("passport").toString(),
                     formatTimestamp(jsonTransaction.get("passport_valid_to").toString()),
                     (String) jsonTransaction.get("phone"));
+            users.add(client);
 
             Transaction transaction = new Transaction(client,
                     id,
@@ -93,5 +95,9 @@ public class Parser {
     }
     public List<Transaction> getTransactions() {
         return transactions;
+    }
+
+    public List<User> getUsers() {
+        return users;
     }
 }

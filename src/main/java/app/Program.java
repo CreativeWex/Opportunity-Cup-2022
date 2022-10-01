@@ -9,6 +9,7 @@ import logic.Parser;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class Program {
@@ -18,8 +19,11 @@ public class Program {
         List<User> users = parser.getUsers();
 
         Database database = new Database();
-        database.fillDatabaseFromList(transactions);
+//        database.fillDatabaseFromList(transactions);
 
         Frauds frauds = new Frauds(Database.getConnection(), users, transactions);
+        LinkedHashSet<User> suspiciousUserInDay = frauds.findSuspiciousClientsTransactionsManyInDay();
+        LinkedHashSet<User> suspiciousUserInMonth = frauds.findSuspiciousClientsTransactionsManyInMonth();
+        System.exit(0);
     }
 }

@@ -23,16 +23,50 @@ public class Frauds {
         this.connection = connection;
     }
 
-    private LinkedHashSet<User> findSuspiciousClients() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT client FROM users GROUP BY client HAVING COUNT(*) > 10;");
-        while (resultSet.next()) {
+    private LinkedHashSet<String> suspiciousTransactions = new LinkedHashSet<>();
 
-            gotManyTransactions.add(resultSet.getString("client"));
-        }
+    public LinkedHashSet<User> findSuspiciousClientsTransactionsManyInDay() throws SQLException {
+        LinkedHashSet<User> usersGotManyTransactions = new LinkedHashSet<>();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT client FROM users\n" +
+                "INNER JOIN transactions t on t.id = users.transaction_id\n" +
+                "WHERE t.oper_result LIKE 'Успешно'\n" +
+                "GROUP BY client, EXTRACT(DAY FROM t.transaction_date::date)\n" +
+                "HAVING sum(amount) > 100000;");
+
+        return fillingUsersGotManyTransactions(resultSet);
     }
 
-    public LinkedHashSet<User> getUsersGotManyTransactions() {
-        return usersGotManyTransactions;
+    public LinkedHashSet<User> findSuspiciousClientsTransactionsManyInMonth() throws SQLException {
+        LinkedHashSet<User> usersGotManyTransactions = new LinkedHashSet<>();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT client FROM users\n" +
+                "INNER JOIN transactions t on t.id = users.transaction_id\n" +
+                "WHERE t.oper_result LIKE 'Успешно'\n" +
+                "GROUP BY client, EXTRACT(MONTH FROM t.transaction_date::date)\n" +
+                "HAVING sum(t.amount) > 1000000;");
+
+        return fillingUsersGotManyTransactions(resultSet);
+    }
+
+    private LinkedHashSet<User> fillingUsersGotManyTransactions(ResultSet resultSet) {
+        try {
+            LinkedHashSet<User> usersGotManyTransactions = new LinkedHashSet<>();
+            while (resultSet.next()) {
+                suspiciousTransactions.add(resultSet.getString("client"));
+            }
+            for (String item : suspiciousTransactions) {
+                for (User user : allUsers) {
+                    if (item.equals(user.getClientId())) {
+                        usersGotManyTransactions.add(user);
+                        break;
+                    }
+                }
+            }
+            suspiciousTransactions.clear();
+            return usersGotManyTransactions;
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

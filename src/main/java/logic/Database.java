@@ -13,8 +13,12 @@ import java.util.List;
 public class Database {
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/open_cup";
     private static final String DB_USERNAME = "postgres";
-    private static final String DB_PASSWORD = "1234";
+    private static final String DB_PASSWORD = "3696";
     private static Connection connection;
+
+    public static Connection getConnection() {
+        return connection;
+    }
 
     public Database() {
         try {
@@ -75,8 +79,6 @@ public class Database {
             clientsAmount += preparedStatement.executeUpdate();
         }
         System.out.println("Amount of client in database:\t" + clientsAmount);
-    }
-    public static Connection getConnection() {
-        return connection;
+
     }
 }

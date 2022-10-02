@@ -32,4 +32,3 @@ CREATE TABLE IF NOT EXISTS users (
      phone TEXT,
      transaction_id TEXT REFERENCES transactions(id)
 );
-

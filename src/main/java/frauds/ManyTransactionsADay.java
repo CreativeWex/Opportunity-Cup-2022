@@ -1,7 +1,10 @@
-package Frauds;
+package frauds;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Map;
 
 public class ManyTransactionsADay implements Fraud{
     private final Connection connection;
@@ -53,20 +56,51 @@ public class ManyTransactionsADay implements Fraud{
         }
         return amount;
     }
+
     @Override
-    public void getFraudTransactionsIds() throws SQLException {
+    public HashSet<String> getFraudTransactionsIds() throws SQLException {
         LinkedHashSet<String> suspiciousUsersIds = findUserId();
+        HashMap<String, String> approvedUsersAndTransactionDates = new HashMap<>();
+
         for (String userId : suspiciousUsersIds) {
-            System.out.println("Пользователь: " + userId);
             LinkedHashSet<String> dates = findDatesWhenTransactionsMade(userId);
             for (String date : dates) {
-                System.out.println("Дата: " + date + "; Количество транзакций: " + countTransactionsAmountPerDay(date, userId));
+                int amount = countTransactionsAmountPerDay(date, userId);
+                if (amount > 10) {
+                    approvedUsersAndTransactionDates.put(userId, date);
+                }
             }
         }
+        HashSet<String> fraudTrancationsIds = new HashSet<>();
+        for (Map.Entry entry : approvedUsersAndTransactionDates.entrySet()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT transactions.id" +
+                    " FROM users INNER JOIN transactions ON(users.transaction_id = transactions.id)" +
+                    " WHERE transaction_date::text LIKE ? AND client = ?;");
+            preparedStatement.setString(1, entry.getValue()+ " __:__:__");
+            preparedStatement.setString(2, (String) entry.getKey());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                fraudTrancationsIds.add(resultSet.getString("id"));
+            }
+        }
+        return fraudTrancationsIds;
     }
 
     @Override
-    public void insertIntoDatabase() {
+    public void insertIntoDatabase() throws SQLException {
+        Statement createTable = connection.createStatement();
+        createTable.executeUpdate("DROP TABLE IF EXISTS fraud_many_transactions_a_day; " +
+                "CREATE TABLE IF NOT EXISTS fraud_many_transactions_a_day" +
+                "(transaction_id TEXT PRIMARY KEY REFERENCES transactions(id));");
 
+        HashSet<String> transactionsIds = getFraudTransactionsIds();
+
+
+    }
+
+    private void displayMap(HashMap<String, String> userDate) {
+        for (Map.Entry entry : userDate.entrySet()) {
+            System.out.println("ID: " + entry.getKey() + "; Date: " + entry.getValue());
+        }
     }
 }

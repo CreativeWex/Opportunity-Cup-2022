@@ -1,6 +1,6 @@
 package app;
 
-import Frauds.ManyTransactionsADay;
+import frauds.ManyTransactionsADay;
 import logic.Database;
 import models.Transaction;
 import org.json.simple.parser.ParseException;
@@ -18,10 +18,8 @@ public class Program {
         Database database = new Database();
         database.fillDatabaseFromList(transactions);
 
-        System.out.println("=================[БОЛЬШЕ 10 ТРАНЗАКЦИЙ ЗА ДЕНЬ]=====================");
         ManyTransactionsADay manyTransactionsADay = new ManyTransactionsADay(Database.getConnection());
-        manyTransactionsADay.getFraudTransactionsIds();
-        System.out.println("======================================");
+        manyTransactionsADay.insertIntoDatabase();
 
 
 

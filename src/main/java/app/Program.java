@@ -1,6 +1,6 @@
 package app;
 
-import logic.Frauds;
+import frauds.ExpensiveTransactions;
 import logic.Database;
 import models.Transaction;
 import models.User;
@@ -21,9 +21,9 @@ public class Program {
         Database database = new Database();
 //        database.fillDatabaseFromList(transactions);
 
-        Frauds frauds = new Frauds(Database.getConnection(), users, transactions);
-        LinkedHashSet<User> suspiciousUserInDay = frauds.findSuspiciousClientsTransactionsManyInDay();
-        LinkedHashSet<User> suspiciousUserInMonth = frauds.findSuspiciousClientsTransactionsManyInMonth();
-        System.exit(0);
+        System.out.println("=================[БОЛЬШЕ 100К В ДЕНЬ]=====================");
+        ExpensiveTransactions expensiveTransactions = new ExpensiveTransactions(Database.getConnection());
+        expensiveTransactions.getFraudTransactionsIds();
+
     }
 }

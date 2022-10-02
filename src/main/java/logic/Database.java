@@ -10,13 +10,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class DataBase {
+public class Database {
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/open_cup";
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "1234";
     private static Connection connection;
 
-    public DataBase() {
+    public Database() {
         try {
             HikariConfig config = new HikariConfig();
             config.setJdbcUrl(DB_URL);
@@ -56,7 +56,7 @@ public class DataBase {
             preparedStatement.setString(12, transaction.getAddress());
             transactionsAmount += preparedStatement.executeUpdate();
         }
-        System.out.println("Amount of transactions in database:\t" + transactionsAmount);
+        System.out.println("Amount of transactions lines in database:\t" + transactionsAmount);
 
         for (Transaction transaction : list) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users" +
@@ -74,7 +74,13 @@ public class DataBase {
             preparedStatement.setString(9, transaction.getId());
             clientsAmount += preparedStatement.executeUpdate();
         }
-        System.out.println("Amount of client in database:\t" + clientsAmount);
+        System.out.println("Amount of client lines in database:\t" + clientsAmount);
+    }
+    public static Connection getConnection() {
+        return connection;
+    }
 
+    public static void closeConnection() throws SQLException {
+        connection.close();
     }
 }

@@ -92,9 +92,16 @@ public class ManyTransactionsADay implements Fraud{
         createTable.executeUpdate("DROP TABLE IF EXISTS fraud_many_transactions_a_day; " +
                 "CREATE TABLE IF NOT EXISTS fraud_many_transactions_a_day" +
                 "(transaction_id TEXT PRIMARY KEY REFERENCES transactions(id));");
+        createTable.close();
+        System.out.println("fraud_many_transactions_a_day table has been created");
 
         HashSet<String> transactionsIds = getFraudTransactionsIds();
-
+        for (String id : transactionsIds) {
+            PreparedStatement insert = connection.prepareStatement("INSERT INTO fraud_many_transactions_a_day(transaction_id) VALUES (?);");
+            insert.setString(1, id);
+            insert.executeUpdate();
+        }
+        System.out.println("All data has been inserted into fraud_many_transactions_a_day");
 
     }
 

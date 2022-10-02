@@ -21,7 +21,7 @@ public class Program {
         Database database = new Database();
 //        database.fillDatabaseFromList(transactions);
 
-        System.out.println("=================[БОЛЬШЕ 100К В ДЕНЬ]=====================");
+        System.out.println("=================[БОЛЬШЕ 100К В ДЕНЬ И 1млн В МЕСЯЦ]=====================");
         ExpensiveTransactions expensiveTransactions = new ExpensiveTransactions(Database.getConnection());
         expensiveTransactions.getFraudTransactionsIds();
 

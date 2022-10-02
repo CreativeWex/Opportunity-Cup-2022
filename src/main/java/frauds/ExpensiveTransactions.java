@@ -1,10 +1,6 @@
 package frauds;
 
-import models.User;
-
 import java.sql.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class ExpensiveTransactions implements Fraud {
@@ -20,7 +16,7 @@ public class ExpensiveTransactions implements Fraud {
         ResultSet resultSet = statement.executeQuery("SELECT client FROM users\n" +
                 "INNER JOIN transactions t on t.id = users.transaction_id\n" +
                 "WHERE t.oper_result LIKE 'Успешно'\n" +
-                "GROUP BY client, EXTRACT(DAY FROM t.transaction_date::date)\n" +
+                "GROUP BY client, t.transaction_date::date\n" +
                 "HAVING sum(amount) > 100000;");
 
         while (resultSet.next()) {
@@ -33,10 +29,10 @@ public class ExpensiveTransactions implements Fraud {
     private LinkedList<String> findDateInDay() throws SQLException {
         LinkedList<String> date = new LinkedList<>();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT EXTRACT(DAY FROM t.transaction_date::date) date FROM users\n" +
+        ResultSet resultSet = statement.executeQuery("SELECT t.transaction_date::date date FROM users\n" +
                 "INNER JOIN transactions t on t.id = users.transaction_id\n" +
                 "WHERE t.oper_result LIKE 'Успешно'\n" +
-                "GROUP BY client, EXTRACT(DAY FROM t.transaction_date::date)\n" +
+                "GROUP BY client, t.transaction_date::date\n" +
                 "HAVING sum(amount) > 100000;");
         while (resultSet.next()) {
             date.add(resultSet.getString("date"));
@@ -46,26 +42,42 @@ public class ExpensiveTransactions implements Fraud {
         return date;
     }
 
-    private LinkedList<String> findSuspiciousTransaction(String usersId, String date) throws SQLException {
-        LinkedList<String> transactions = new LinkedList<>();
+
+    private static final LinkedList<String> transactions = new LinkedList<>();
+
+    private void findSuspiciousTransaction(String usersId, Date date) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "SELECT t.id FROM transactions t\n" +
                         "INNER JOIN users u on t.id = u.transaction_id\n" +
-                        "WHERE oper_result LIKE 'Успешно' AND client = ? AND EXTRACT(DAY FROM transaction_date::date) = ?;");
+                        "WHERE oper_result LIKE 'Успешно' AND client = ? AND transaction_date::date = ?;");
 
-//        preparedStatement.setString(1, usersId);
-//        preparedStatement.setString(2, date);
-//        ResultSet resultSet = preparedStatement.executeQuery();
-//
-//        while (resultSet.next()){
-//            transactions.add(resultSet.getString("t.id"));
-//        }
-        return transactions;
+        preparedStatement.setString(1, usersId);
+        preparedStatement.setDate(2, date);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()){
+            transactions.add(resultSet.getString("id"));
+        }
+        preparedStatement.close();
     }
 
 
     @Override
-    public void insertIntoDatabase() {
+    public void insertIntoDatabase() throws SQLException {
+        Statement createTable = connection.createStatement();
+        createTable.executeUpdate("DROP TABLE IF EXISTS fraud_expensive_transactions; " +
+                "CREATE TABLE IF NOT EXISTS fraud_expensive_transactions" +
+                "(transaction_id TEXT PRIMARY KEY REFERENCES transactions(id));");
+        createTable.close();
+        System.out.println("fraud_expensive_transactions table has been created");
+
+        LinkedList<String> transactionsIds = transactions;
+        for (String id : transactionsIds) {
+            PreparedStatement insert = connection.prepareStatement("INSERT INTO fraud_expensive_transactions(transaction_id) VALUES (?);");
+            insert.setString(1, id);
+            insert.executeUpdate();
+        }
+        System.out.println("All data has been inserted into fraud_many_transactions_a_day");
 
     }
 
@@ -73,10 +85,10 @@ public class ExpensiveTransactions implements Fraud {
     public void getFraudTransactionsIds() throws SQLException {
         LinkedList<String> suspiciousUsersId = findUserIdInDay();
         LinkedList<String> suspiciousDate = findDateInDay();
-        LinkedList<String> suspiciousTransactions;
         for (int i = 0; i < suspiciousUsersId.size(); i++) {
-            suspiciousTransactions = findSuspiciousTransaction(suspiciousUsersId.get(i), suspiciousDate.get(i));
+            findSuspiciousTransaction(suspiciousUsersId.get(i), Date.valueOf(suspiciousDate.get(i)));
         }
+        insertIntoDatabase();
     }
 }
 

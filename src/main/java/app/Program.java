@@ -18,8 +18,13 @@ public class Program {
         Database database = new Database();
         database.fillDatabaseFromList(transactions);
 
+        System.out.println("=================[БОЛЬШЕ 10 ТРАНЗАКЦИЙ ЗА ДЕНЬ]=====================");
         ManyTransactionsADay manyTransactionsADay = new ManyTransactionsADay(Database.getConnection());
-        manyTransactionsADay.insertIntoDatabase();
+        manyTransactionsADay.getFraudTransactionsIds();
+        System.out.println("======================================");
 
+
+
+        Database.closeConnection();
     }
 }

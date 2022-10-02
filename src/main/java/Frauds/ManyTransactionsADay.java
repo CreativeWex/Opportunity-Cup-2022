@@ -1,11 +1,11 @@
 package Frauds;
 
 import java.sql.*;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 public class ManyTransactionsADay implements Fraud{
-    private Connection connection;
+    private final Connection connection;
+    LinkedHashSet<String> fraudTransactions;
     public ManyTransactionsADay(Connection connection) {
         this.connection = connection;
     }
@@ -17,6 +17,8 @@ public class ManyTransactionsADay implements Fraud{
         while (resultSet.next()) {
             userIds.add(resultSet.getString("client"));
         }
+
+        statement.close();
         return userIds;
     }
 
@@ -25,25 +27,40 @@ public class ManyTransactionsADay implements Fraud{
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT transaction_date FROM users " +
                 "INNER JOIN transactions ON(users.transaction_id = transactions.id) WHERE client = ?;");
         preparedStatement.setString(1, userId);
+
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             String tmp = resultSet.getString("transaction_date");
             dates.add(tmp.substring(0, tmp.length() - 9));
         }
+
+        preparedStatement.close();
         return dates;
     }
 
-    private void countTransactionsAmountPerDay(LinkedHashMap<String, Integer> map, String date) {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM transactions WHERE transaction_date ");
+    private int countTransactionsAmountPerDay(String date, String userId) throws SQLException {
+        date += " __:__:__";
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT transaction_date FROM users" +
+                " INNER JOIN transactions ON(users.transaction_id = transactions.id) WHERE transaction_date::text" +
+                " LIKE ? AND client = ?;");
+        preparedStatement.setString(1, date);
+        preparedStatement.setString(2, userId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        int amount = 0;
+        while (resultSet.next()) {
+            amount++;
+        }
+        return amount;
     }
     @Override
     public void getFraudTransactionsIds() throws SQLException {
         LinkedHashSet<String> suspiciousUsersIds = findUserId();
-        for (String id : suspiciousUsersIds) {
-            LinkedHashSet<String> dates = findDatesWhenTransactionsMade(id);
-            LinkedHashMap<String, Integer> transactionsAmountPerDay;
+        for (String userId : suspiciousUsersIds) {
+            System.out.println("Пользователь: " + userId);
+            LinkedHashSet<String> dates = findDatesWhenTransactionsMade(userId);
             for (String date : dates) {
-                countTransactionsAmountPerDay()
+                System.out.println("Дата: " + date + "; Количество транзакций: " + countTransactionsAmountPerDay(date, userId));
             }
         }
     }

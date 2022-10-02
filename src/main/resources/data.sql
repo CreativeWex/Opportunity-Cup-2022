@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     id TEXT PRIMARY KEY,
     transaction_date TIMESTAMP NOT NULL,
     card TEXT NOT NULL,
-    account TEXT NOT NULL, -- TODO: соединить с клиентом
+    account TEXT NOT NULL,
     account_valid_to TIMESTAMP NOT NULL,
     oper_type TEXT NOT NULL,
     amount NUMERIC(10,2) NOT NULL,

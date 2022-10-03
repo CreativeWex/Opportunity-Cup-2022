@@ -25,6 +25,8 @@ public class Program {
         MinTimeBeforeDebitAndCredit minTimeBeforeDebitAndCredit = new MinTimeBeforeDebitAndCredit(Database.getConnection(), parser.getUsers());
         minTimeBeforeDebitAndCredit.insertIntoDatabase();
 
+
+
         Database.closeConnection();
     }
 }

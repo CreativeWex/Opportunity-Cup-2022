@@ -1,6 +1,7 @@
 package app;
 
 import frauds.ManyTransactionsADay;
+import frauds.MinTimeBeforeDebitAndCredit;
 import logic.Database;
 import models.Transaction;
 import org.json.simple.parser.ParseException;
@@ -21,7 +22,8 @@ public class Program {
         ManyTransactionsADay manyTransactionsADay = new ManyTransactionsADay(Database.getConnection());
         manyTransactionsADay.insertIntoDatabase();
 
-
+        MinTimeBeforeDebitAndCredit minTimeBeforeDebitAndCredit = new MinTimeBeforeDebitAndCredit(Database.getConnection(), parser.getUsers());
+        minTimeBeforeDebitAndCredit.insertIntoDatabase();
 
         Database.closeConnection();
     }

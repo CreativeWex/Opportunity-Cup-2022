@@ -6,9 +6,9 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
+// Более 10 операций в день
 public class ManyTransactionsADay implements Fraud{
     private final Connection connection;
-    LinkedHashSet<String> fraudTransactions;
     public ManyTransactionsADay(Connection connection) {
         this.connection = connection;
     }
@@ -102,7 +102,6 @@ public class ManyTransactionsADay implements Fraud{
             insert.executeUpdate();
         }
         System.out.println("All data has been inserted into fraud_many_transactions_a_day");
-
     }
 
     private void displayMap(HashMap<String, String> userDate) {

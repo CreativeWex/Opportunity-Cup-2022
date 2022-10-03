@@ -1,5 +1,6 @@
 package app;
 
+import frauds.ExpensiveTransactions;
 import frauds.ManyTransactionsADay;
 import frauds.MinTimeBeforeDebitAndCredit;
 import logic.Database;
@@ -19,13 +20,19 @@ public class Program {
         Database database = new Database();
         database.fillDatabaseFromList(transactions);
 
+        System.out.println("==[1]==");
         ManyTransactionsADay manyTransactionsADay = new ManyTransactionsADay(Database.getConnection());
         manyTransactionsADay.insertIntoDatabase();
+        System.out.println("=======");
 
+        System.out.println("==[2]==");
         MinTimeBeforeDebitAndCredit minTimeBeforeDebitAndCredit = new MinTimeBeforeDebitAndCredit(Database.getConnection(), parser.getUsers());
         minTimeBeforeDebitAndCredit.insertIntoDatabase();
+        System.out.println("=======");
 
-
+        System.out.println("==[3, 4]==");
+        ExpensiveTransactions expensiveTransactions = new ExpensiveTransactions(Database.getConnection());
+        expensiveTransactions.getFraudTransactionsIds();
 
         Database.closeConnection();
     }

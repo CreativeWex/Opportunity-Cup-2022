@@ -60,7 +60,7 @@ public class Database {
             preparedStatement.setString(12, transaction.getAddress());
             transactionsAmount += preparedStatement.executeUpdate();
         }
-        System.out.println("Amount of transactions in database:\t" + transactionsAmount);
+        System.out.println("Amount of transactions lines in database:\t" + transactionsAmount);
 
         for (Transaction transaction : list) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users" +
@@ -78,7 +78,18 @@ public class Database {
             preparedStatement.setString(9, transaction.getId());
             clientsAmount += preparedStatement.executeUpdate();
         }
+<<<<<<< HEAD
         System.out.println("Amount of client in database:\t" + clientsAmount);
 
+=======
+        System.out.println("Amount of client lines in database:\t" + clientsAmount);
+    }
+    public static Connection getConnection() {
+        return connection;
+>>>>>>> master
+    }
+
+    public static void closeConnection() throws SQLException {
+        connection.close();
     }
 }

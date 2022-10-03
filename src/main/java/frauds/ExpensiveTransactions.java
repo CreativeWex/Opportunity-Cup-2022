@@ -1,6 +1,7 @@
 package frauds;
 
 import java.sql.*;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public class ExpensiveTransactions implements Fraud {
@@ -148,7 +149,7 @@ public class ExpensiveTransactions implements Fraud {
     }
 
     @Override
-    public void getFraudTransactionsIds() throws SQLException {
+    public HashSet<String> getFraudTransactionsIds() throws SQLException {
         //метод по нахождению юзеров > 100к в день
         LinkedList<String> suspiciousUsersId = findUserIdInDay();
         LinkedList<String> suspiciousDate = findDateInDay();
@@ -164,6 +165,8 @@ public class ExpensiveTransactions implements Fraud {
             findSuspiciousTransactionMonth(suspiciousUsersId.get(i), Date.valueOf(suspiciousDate.get(i)));
         }
         insertIntoDatabaseForMonth();
+        HashSet<String> emirBubyldyga = null;
+        return emirBubyldyga;
     }
 }
 

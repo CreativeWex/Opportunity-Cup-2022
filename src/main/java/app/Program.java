@@ -36,7 +36,8 @@ public class Program {
         expensiveTransactions.getFraudTransactionsIds();
 
         ResultWriter resultWriter = new ResultWriter(Database.getConnection(),
-                manyTransactionsADay.getFraudTransactionsIds(), minTimeBeforeDebitAndCredit.getFraudTransactionsIds());
+                manyTransactionsADay.getFraudTransactionsIds(), minTimeBeforeDebitAndCredit.getFraudTransactionsIds(),
+                expensiveTransactions.getExpensiveTransIds(), expensiveTransactions.getExpensiveMonthTransIds());
         resultWriter.createResultFile();
         System.out.println("Result file created");
         Database.closeConnection();

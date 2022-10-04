@@ -7,6 +7,8 @@ import java.util.LinkedList;
 public class ExpensiveTransactions implements Fraud {
     private Connection connection;
     private static final LinkedList<String> transactions = new LinkedList<>();
+    private LinkedList<String> expensiveTransIds = new LinkedList<>();
+    private LinkedList<String> expensiveMonthTransIds = new LinkedList<>();
 
     public ExpensiveTransactions(Connection connection) {
         this.connection = connection;
@@ -56,6 +58,7 @@ public class ExpensiveTransactions implements Fraud {
 
         while (resultSet.next()){
             transactions.add(resultSet.getString("id"));
+            expensiveTransIds.add(resultSet.getString("id"));
         }
         preparedStatement.close();
     }
@@ -104,6 +107,8 @@ public class ExpensiveTransactions implements Fraud {
 
         while (resultSet.next()){
             transactions.add(resultSet.getString("id"));
+            expensiveMonthTransIds.add(resultSet.getString("id"));
+
         }
         preparedStatement.close();
     }
@@ -126,6 +131,7 @@ public class ExpensiveTransactions implements Fraud {
         }
         System.out.println("All data has been inserted into fraud_many_transactions_a_day");
         createTable.close();
+
         transactions.clear();
     }
 
@@ -167,6 +173,14 @@ public class ExpensiveTransactions implements Fraud {
         insertIntoDatabaseForMonth();
         HashSet<String> emirBubyldyga = null;
         return emirBubyldyga;
+    }
+
+    public LinkedList<String> getExpensiveTransIds() {
+        return expensiveTransIds;
+    }
+
+    public LinkedList<String> getExpensiveMonthTransIds() {
+        return expensiveMonthTransIds;
     }
 }
 

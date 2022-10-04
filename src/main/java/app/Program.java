@@ -4,6 +4,7 @@ import frauds.ExpensiveTransactions;
 import frauds.ManyTransactionsADay;
 import frauds.MinTimeBeforeDebitAndCredit;
 import logic.Database;
+import logic.ResultWriter;
 import models.Transaction;
 import org.json.simple.parser.ParseException;
 import logic.Parser;
@@ -34,6 +35,13 @@ public class Program {
         ExpensiveTransactions expensiveTransactions = new ExpensiveTransactions(Database.getConnection());
         expensiveTransactions.getFraudTransactionsIds();
 
+        ResultWriter resultWriter = new ResultWriter(Database.getConnection(),
+                manyTransactionsADay.getFraudTransactionsIds(), minTimeBeforeDebitAndCredit.getFraudTransactionsIds(),
+                expensiveTransactions.getExpensiveTransIds(), expensiveTransactions.getExpensiveMonthTransIds());
+        resultWriter.createResultFile();
+        System.out.println("Result file created");
         Database.closeConnection();
     }
 }
+
+//TODO: pattarn facade

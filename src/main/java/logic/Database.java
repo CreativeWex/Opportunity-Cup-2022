@@ -8,6 +8,7 @@ import models.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 public class Database {
@@ -28,11 +29,54 @@ public class Database {
                 throw new SQLException("Database connection failed");
             }
             connection = hikariDataSource.getConnection();
-            System.out.println("Database successfully connected");
+            System.out.println("Database successfully connected\n");
         }
         catch (Exception exception) {
             throw new RuntimeException("Connection failed from createDataSourceConnection: " + exception);
         }
+    }
+
+    public void prepareSetup() throws SQLException {
+
+        Statement createTransactions = connection.createStatement();
+        createTransactions.executeUpdate("DROP TABLE IF EXISTS fraud_expensive_transactions;" +
+                "DROP TABLE IF EXISTS fraud_expensive_transactions_month;" +
+                "DROP TABLE IF EXISTS fraud_many_transactions_a_day;" +
+                "DROP TABLE IF EXISTS fraud_min_time_before_debit_credit;" +
+                "CREATE TABLE IF NOT EXISTS transactions (\n" +
+                "    id TEXT PRIMARY KEY,\n" +
+                "    transaction_date TIMESTAMP NOT NULL,\n" +
+                "    card TEXT NOT NULL,\n" +
+                "    account TEXT NOT NULL,\n" +
+                "    account_valid_to TIMESTAMP NOT NULL,\n" +
+                "    oper_type TEXT NOT NULL,\n" +
+                "    amount NUMERIC(10,2) NOT NULL,\n" +
+                "    oper_result TEXT NOT NULL,\n" +
+                "    terminal TEXT NOT NULL,\n" +
+                "    terminal_type TEXT NOT NULL,\n" +
+                "    city TEXT NOT NULL,\n" +
+                "    address TEXT NOT NULL\n" +
+                ");");
+        System.out.println("Created table transactions");
+        createTransactions.close();
+
+        Statement createUsers = connection.createStatement();
+        createUsers.executeUpdate("CREATE TABLE IF NOT EXISTS users (\n" +
+                "     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY ,\n" +
+                "     client TEXT NOT NULL,\n" +
+                "     last_name TEXT NOT NULL,\n" +
+                "     first_name TEXT NOT NULL,\n" +
+                "     patronymic TEXT,\n" +
+                "     date_of_birth TIMESTAMP NOT NULL,\n" +
+                "     passport TEXT NOT NULL,\n" +
+                "     passport_valid_to TIMESTAMP NOT NULL,\n" +
+                "     phone TEXT,\n" +
+                "     transaction_id TEXT REFERENCES transactions(id)\n" +
+                ");" +
+                "DELETE FROM users;" +
+                "DELETE FROM transactions;");
+        System.out.println("Created table users");
+        createUsers.close();
     }
     public void fillDatabaseFromList(List<Transaction> list) throws SQLException {
         int clientsAmount = 0;
@@ -76,7 +120,7 @@ public class Database {
         }
         System.out.println("Amount of client in database:\t" + clientsAmount);
 
-        System.out.println("Amount of client lines in database:\t" + clientsAmount);
+        System.out.println("Amount of client lines in database:\t" + clientsAmount + "\n");
     }
     public static Connection getConnection() {
         return connection;

@@ -11,11 +11,11 @@ import java.util.LinkedList;
 
 public class ResultWriter {
     private Connection connection;
-    private  final String RESULT_FILE_NAME = "result.txt";
-    HashSet<String> manyTransADayIds = new HashSet<>();
-    HashSet<String> minTimeTransIds = new HashSet<>();
-    LinkedList<String> expensiveTransIds = new LinkedList<>();
-    LinkedList<String> expensiveMonthTransIds = new LinkedList<>();
+    private final String RESULT_FILE_NAME = "result.txt";
+    HashSet<String> manyTransADayIds;
+    HashSet<String> minTimeTransIds;
+    LinkedList<String> expensiveTransIds; // TODO:
+    LinkedList<String> expensiveMonthTransIds; // TODO:
 
 
     public ResultWriter(Connection connection, HashSet<String> manyTransADayIds, HashSet<String> minTimeTransIds,
@@ -53,7 +53,6 @@ public class ResultWriter {
             fileWriter.write(id + ", ");
         }
         fileWriter.write("\n\n");
-
 
         fileWriter.close();
     }

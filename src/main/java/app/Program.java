@@ -19,6 +19,7 @@ public class Program {
         List<Transaction> transactions = parser.getTransactions();
 
         Database database = new Database();
+        database.prepareSetup();
         database.fillDatabaseFromList(transactions);
 
         System.out.println("==[1]==");

@@ -1,8 +1,6 @@
 package app;
 
-import frauds.ExpensiveTransactions;
-import frauds.ManyTransactionsADay;
-import frauds.MinTimeBeforeDebitAndCredit;
+import frauds.*;
 import logic.Database;
 import logic.ResultWriter;
 import models.Transaction;
@@ -32,17 +30,19 @@ public class Program {
         minTimeBeforeDebitAndCredit.insertIntoDatabase();
         System.out.println("=======");
 
-        System.out.println("==[3, 4]==");
-        ExpensiveTransactions expensiveTransactions = new ExpensiveTransactions(Database.getConnection());
-        expensiveTransactions.getFraudTransactionsIds();
+        System.out.println("==[3]==");
+        ExpensiveTransactionsInDay expensiveTransactionsInDay = new ExpensiveTransactionsInDay(Database.getConnection());
+        expensiveTransactionsInDay.insertIntoDatabase();
+
+        System.out.println("==[4]==");
+        ExpensiveTransactionsInMonth expensiveTransactionsInMonth = new ExpensiveTransactionsInMonth(Database.getConnection());
+        expensiveTransactionsInMonth.insertIntoDatabase();
 
         ResultWriter resultWriter = new ResultWriter(Database.getConnection(),
                 manyTransactionsADay.getFraudTransactionsIds(), minTimeBeforeDebitAndCredit.getFraudTransactionsIds(),
-                expensiveTransactions.getExpensiveTransIds(), expensiveTransactions.getExpensiveMonthTransIds());
+                expensiveTransactionsInDay.getFraudTransactionsIds(), expensiveTransactionsInMonth.getFraudTransactionsIds());
         resultWriter.createResultFile();
         System.out.println("Result file created");
         Database.closeConnection();
     }
 }
-
-//TODO: pattarn facade

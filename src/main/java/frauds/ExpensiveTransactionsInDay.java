@@ -68,7 +68,7 @@ public class ExpensiveTransactionsInDay implements Fraud{
         Statement createTable = connection.createStatement();
         createTable.executeUpdate("CREATE TABLE IF NOT EXISTS fraud_expensive_transactions" +
                 "(transaction_id TEXT PRIMARY KEY REFERENCES transactions(id));");
-        System.out.println("fraud_expensive_transactions table has been created");
+        System.out.println("fraud_expensive_transactions_a_day table has been created");
 
         HashSet<String> transactionsIds = getFraudTransactionsIds();
         for (String id : transactionsIds) {

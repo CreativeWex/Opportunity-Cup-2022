@@ -1,8 +1,6 @@
 package app;
 
-import frauds.ExpensiveTransactions;
-import frauds.ManyTransactionsADay;
-import frauds.MinTimeBeforeDebitAndCredit;
+import frauds.*;
 import logic.Database;
 import logic.ResultWriter;
 import models.Transaction;
@@ -18,31 +16,33 @@ public class Program {
         Parser parser = new Parser();
         List<Transaction> transactions = parser.getTransactions();
 
+        System.out.println("======================================");
         Database database = new Database();
         database.prepareSetup();
         database.fillDatabaseFromList(transactions);
+        System.out.println("======================================");
 
-        System.out.println("==[1]==");
         ManyTransactionsADay manyTransactionsADay = new ManyTransactionsADay(Database.getConnection());
         manyTransactionsADay.insertIntoDatabase();
-        System.out.println("=======");
+        System.out.println();
 
-        System.out.println("==[2]==");
         MinTimeBeforeDebitAndCredit minTimeBeforeDebitAndCredit = new MinTimeBeforeDebitAndCredit(Database.getConnection(), parser.getUsers());
         minTimeBeforeDebitAndCredit.insertIntoDatabase();
-        System.out.println("=======");
+        System.out.println();
 
-        System.out.println("==[3, 4]==");
-        ExpensiveTransactions expensiveTransactions = new ExpensiveTransactions(Database.getConnection());
-        expensiveTransactions.getFraudTransactionsIds();
+        ExpensiveTransactionsInDay expensiveTransactionsInDay = new ExpensiveTransactionsInDay(Database.getConnection());
+        expensiveTransactionsInDay.insertIntoDatabase();
+        System.out.println();
+
+        ExpensiveTransactionsInMonth expensiveTransactionsInMonth = new ExpensiveTransactionsInMonth(Database.getConnection());
+        expensiveTransactionsInMonth.insertIntoDatabase();
+        System.out.println("======================================");
 
         ResultWriter resultWriter = new ResultWriter(Database.getConnection(),
                 manyTransactionsADay.getFraudTransactionsIds(), minTimeBeforeDebitAndCredit.getFraudTransactionsIds(),
-                expensiveTransactions.getExpensiveTransIds(), expensiveTransactions.getExpensiveMonthTransIds());
+                expensiveTransactionsInDay.getFraudTransactionsIds(), expensiveTransactionsInMonth.getFraudTransactionsIds());
         resultWriter.createResultFile();
         System.out.println("Result file created");
         Database.closeConnection();
     }
 }
-
-//TODO: pattarn facade

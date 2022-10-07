@@ -29,7 +29,7 @@ public class Database {
                 throw new SQLException("Database connection failed");
             }
             connection = hikariDataSource.getConnection();
-            System.out.println("Database successfully connected\n");
+            System.out.println("Database successfully connected");
         }
         catch (Exception exception) {
             throw new RuntimeException("Connection failed from createDataSourceConnection: " + exception);
@@ -118,9 +118,7 @@ public class Database {
             preparedStatement.setString(9, transaction.getId());
             clientsAmount += preparedStatement.executeUpdate();
         }
-        System.out.println("Amount of client in database:\t" + clientsAmount);
-
-        System.out.println("Amount of client lines in database:\t" + clientsAmount + "\n");
+        System.out.println("Amount of client lines in database:\t" + clientsAmount);
     }
     public static Connection getConnection() {
         return connection;

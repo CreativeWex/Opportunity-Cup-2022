@@ -1,25 +1,21 @@
 package logic;
 
-import frauds.ExpensiveTransactions;
-import frauds.ManyTransactionsADay;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 public class ResultWriter {
     private Connection connection;
     private final String RESULT_FILE_NAME = "result.txt";
     HashSet<String> manyTransADayIds;
     HashSet<String> minTimeTransIds;
-    LinkedList<String> expensiveTransIds; // TODO:
-    LinkedList<String> expensiveMonthTransIds; // TODO:
+    HashSet<String> expensiveTransIds; // TODO:
+    HashSet<String> expensiveMonthTransIds; // TODO:
 
 
     public ResultWriter(Connection connection, HashSet<String> manyTransADayIds, HashSet<String> minTimeTransIds,
-                        LinkedList<String> expensiveTransIds, LinkedList<String> expensiveMonthTransIds) {
+                        HashSet<String> expensiveTransIds, HashSet<String> expensiveMonthTransIds) {
         this.connection = connection;
         this.manyTransADayIds = manyTransADayIds;
         this.minTimeTransIds = minTimeTransIds;
